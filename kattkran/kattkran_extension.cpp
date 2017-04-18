@@ -44,3 +44,23 @@ void circular_motion(bool direction, byte speed) {
       --current_angle;
   }
 }
+
+void go_to_rest() {
+
+}
+
+void turn_water_on() {
+
+}
+
+void turn_water_off() {
+
+}
+
+void time_limit(){
+
+}
+
+void identify_tap(){
+
+}
