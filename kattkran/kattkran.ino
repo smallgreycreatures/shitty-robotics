@@ -8,11 +8,11 @@
 void setup () {
   // QUESTION is the setup correct?
 
-  pinMode(sensor_pin,INPUT) ;
-  servo.attach(servo_pin);
+  pinMode(SENSOR_PIN,INPUT) ;
+  servo.attach(SERVO_PIN);
   /*ej krav for analog signal
-  pinMode(actuator_1_pin,OUTPUT)
-  pinMode(actuator_2_pin,OUTPUT)
+  pinMode(ACTUATOR_1_PIN,OUTPUT)
+  pinMode(ACTUATOR_2_PIN,OUTPUT)
   */
 }
 
@@ -22,7 +22,7 @@ see flow shart for execution order
 QUESTION does the loop look good?
 */
 
-  if (!is_water_on && (digitalRead(sensor_pin)==HIGH)){//turn the water on
+  if (!is_water_on && (digitalRead(SENSOR_PIN)==HIGH)){//turn the water on
     go_to_rest() ;
     //restposition probebly pointing away from tap
     identify_tap() ;

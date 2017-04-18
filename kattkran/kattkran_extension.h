@@ -3,13 +3,13 @@
 #include "Arduino.h"
 #include <Servo.h>
 
-const byte servo_pin=6 ;  //digital servo ut
-const byte sensor_pin=2 ; //digital in
-const byte actuator_1_pin=5 ; //simulerad analog fran digital
-const byte actuator_2_pin=3 ; //simulerad analog fran digital
+const byte SERVO_PIN=6 ;  //digital servo ut
+const byte SENSOR_PIN=2 ; //digital in
+const byte ACTUATOR_1_PIN=5 ; //simulerad analog fran digital
+const byte ACTUATOR_2_PIN=3 ; //simulerad analog fran digital
 
-const int wait_time=10000;//time between the cat leaving and water tirnd off in ms
-const byte servo_speed=20;//the rotating the servo will have in [ms/deg]
+const int WAIT_TIME=10000;//time between the cat leaving and water tirnd off in ms
+const byte SERVO_SPEED=20;//the rotating the servo will have in [ms/deg]
 
 //the two variables below are detrenmend by identify_tap?
 static byte away_angle=160   ;//angle that the arm shoud start pointig to
@@ -20,10 +20,10 @@ static byte actuator_2_position;//0->0V  , 255->5V
 
 static bool is_water_on=false ;
 
-Servo servo ;
+static Servo servo ;
 
 
-void circular_motion(bool direction,byte speed=servo_speed);
+void circular_motion(bool direction,byte speed=SERVO_SPEED);
   /*den cirklara rorelsen mellan riktad mot kran och riktad fran kran.
   direction syftar pa om den ar riktad mot kranen och ska snurra fran kranen
   eller om den ar riktad fran kranen och ska snurra fran kranen
