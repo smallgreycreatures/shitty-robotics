@@ -8,9 +8,14 @@
 
 
 
+Kattkran::Kattkran(){
+//TODO a nice init
+    pinMode(SENSOR_PIN,INPUT);
+    _servo.attach(SERVO_PIN);
+}
 
 
-void circular_motion(bool direction, byte speed) {
+void Kattkran::circular_motion(bool direction, byte speed) {
   // TODO verify circular_motion function
   /*
 
@@ -21,12 +26,12 @@ void circular_motion(bool direction, byte speed) {
 
   bool increase_angle;//if true increase curren_angle
 
-  start_angle = servo.read() ;
+  start_angle = _servo.read() ;
 
   if (direction) //this if/else determen the goal angle
-    angle_goal = away_angle;
+    angle_goal = _away_angle;
   else //angle=false
-    angle_goal = tap_angle;
+    angle_goal = _tap_angle;
 
   increase_angle = (start_angle < angle_goal);
 
@@ -36,7 +41,7 @@ void circular_motion(bool direction, byte speed) {
     /*
       this loop will change the curren_angle until curren_angle and goal is same
     */
-    servo.write(current_angle) ;
+    _servo.write(current_angle) ;
     delay(speed) ;
     if (increase_angle)
       ++current_angle;
@@ -45,18 +50,19 @@ void circular_motion(bool direction, byte speed) {
   }
 }
 
-void go_to_rest() {
+void Kattkran::go_to_rest() {
 
 }
 
-void turn_water_on() {
+void Kattkran::turn_water_on() {
 
 }
 
-void turn_water_off() {
+void Kattkran::turn_water_off() {
 
 }
 
+<<<<<<< HEAD
 void time_limit(){
    
   int t=0; //time unit
@@ -74,5 +80,37 @@ void time_limit(){
 
 
 void identify_tap(){
+=======
+void Kattkran::time_limit(){
+
+//turns off depending on wait_time
+if(digitalRead(SENSOR_PIN==HIGH)){ //if cat is still there
+  delay(wait_time);
+  Kattkran::time_limit(); //go back to function to test statement again
+
+
+
+}
+else{ //if cat dissappear
+
+ int t=0//time unit
+  while(t<WAIT_TIME){
+    if(digitalRead(SENSOR_PIN==LOW)){
+      t++; //if cat isn't there, ++ time unit to later exit function
+    }
+    else{
+      Kattkran::time_limit(); //if cat appear again go back to function
+    }
+  }
+
+}
+
+
+
+
+}
+
+void Kattkran::identify_tap(){
+>>>>>>> 75420e00e747d2b71ac9ad3cb2fb8cd5abedb54c
 
 }

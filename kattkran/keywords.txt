@@ -1,0 +1,22 @@
+
+
+SERVO_PIN LITERAL1
+SENSOR_PIN LITERAL1
+ACTUATOR_1_PIN LITERAL1
+ACTUATOR_2_PIN LITERAL1
+WAIT_TIME LITERAL1
+SERVO_SPEED LITERAL1
+
+away_angle LITERAL1
+tap_angle LITERAL1
+actuator_1_position LITERAL1
+actuator_2_position LITERAL1
+is_water_on LITERAL1 LITERAL1
+servo LITERAL1
+
+circular_motion KEYWORD2
+go_to_rest KEYWORD2
+turn_water_on KEYWORD2
+turn_water_off KEYWORD2
+time_limit KEYWORD2
+identify_tap KEYWORD2
