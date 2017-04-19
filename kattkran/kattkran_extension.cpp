@@ -59,32 +59,19 @@ void turn_water_off() {
 
 void time_limit(){
    
-//turns off depending on wait_time
-if(digitalRead(SENSOR_PIN==HIGH)){ //if cat is still there
-  delay(wait_time);
-  time_limit(); //go back to function to test statement again
-  
-  
-  
-}
-else{ //if cat dissappear 
- 
- int t=0, waiting_time=10000; //time unit
-  while(t<waiting_time){
-    if(digitalRead(SENSOR_PIN==LOW)){
-      t++; //if cat isn't there, ++ time unit to later exit function 
+  int t=0; //time unit
+  while(t<WAIT_TIME){
+    if(digitalRead(SENSOR_PIN==HIGH)){
+      t=0; //cat's back
     }
     else{
-      time_limit(); //if cat appear again go back to function 
+      t++; //if cat isn't there, ++ time unit to later exit function 
+    }
+    
     }
   }
   
-}
 
-
-
-
-}
 
 void identify_tap(){
 
