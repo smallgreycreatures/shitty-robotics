@@ -62,8 +62,7 @@ void Kattkran::turn_water_off() {
 
 }
 
-<<<<<<< HEAD
-void time_limit(){
+void Kattkran::time_limit(){
    
   int t=0; //time unit
   while(t<WAIT_TIME){
@@ -78,39 +77,8 @@ void time_limit(){
   }
   
 
-
-void identify_tap(){
-=======
-void Kattkran::time_limit(){
-
-//turns off depending on wait_time
-if(digitalRead(SENSOR_PIN==HIGH)){ //if cat is still there
-  delay(wait_time);
-  Kattkran::time_limit(); //go back to function to test statement again
-
-
-
-}
-else{ //if cat dissappear
-
- int t=0//time unit
-  while(t<WAIT_TIME){
-    if(digitalRead(SENSOR_PIN==LOW)){
-      t++; //if cat isn't there, ++ time unit to later exit function
-    }
-    else{
-      Kattkran::time_limit(); //if cat appear again go back to function
-    }
-  }
-
-}
-
-
-
-
-}
-
 void Kattkran::identify_tap(){
->>>>>>> 75420e00e747d2b71ac9ad3cb2fb8cd5abedb54c
+
 
 }
+
