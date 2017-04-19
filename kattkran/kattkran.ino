@@ -3,17 +3,12 @@
 #include "kattkran_extension.h"
 #include <Servo.h>
 
+bool is_water_on=false ;
 
+Kattkran kattkran ;
 
 void setup () {
-  // QUESTION is the setup correct?
-
-  pinMode(SENSOR_PIN,INPUT) ;
-  servo.attach(SERVO_PIN);
-  /*ej krav for analog signal
-  pinMode(ACTUATOR_1_PIN,OUTPUT)
-  pinMode(ACTUATOR_2_PIN,OUTPUT)
-  */
+  pinMode(SENSOR_PIN,INPUT);
 }
 
 void loop() {
@@ -23,20 +18,20 @@ QUESTION does the loop look good?
 */
 
   if (!is_water_on && (digitalRead(SENSOR_PIN)==HIGH)){//turn the water on
-    go_to_rest() ;
+    kattkran.go_to_rest() ;
     //restposition probebly pointing away from tap
-    identify_tap() ;
-    circular_motion(false);
+    kattkran.identify_tap() ;
+    kattkran.circular_motion(false);
     //resting position pointing towardes tap
-    turn_water_on();
+    kattkran.turn_water_on();
     is_water_on=true ;
-    go_to_rest();
+    kattkran.go_to_rest();
   }
   else if (is_water_on){
-    time_limit() ;
-    turn_water_off();
+    kattkran.time_limit() ;
+    kattkran.turn_water_off();
     is_water_on=false;
-    go_to_rest();
-    circular_motion(true);
+    kattkran.go_to_rest();
+    kattkran.circular_motion(true);
   }
 }
