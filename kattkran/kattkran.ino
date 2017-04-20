@@ -9,7 +9,7 @@ Kattkran kattkran ;
 
 void setup () {
   kattkran.init();
-  pinMode(SENSOR_PIN,INPUT);
+  Serial.begin(9600);
 }
 
 void loop() {
@@ -18,7 +18,7 @@ see flow shart for execution order
 QUESTION does the loop look good?
 */
 
-  if (!is_water_on && (digitalRead(SENSOR_PIN)==HIGH)){//turn the water on
+  if (!is_water_on && kattkran.sensor()){//turn the water on
     kattkran.go_to_rest() ;
     //restposition probebly pointing away from tap
     kattkran.identify_tap() ;

@@ -4,7 +4,7 @@
 #include "Arduino.h"
 #include <Servo.h>
 
-const byte SERVO_PIN=6 ;  //digital servo ut
+const byte SERVO_PIN=3;  //digital servo ut
 const byte SENSOR_PIN=2 ; //digital in
 const byte ACTUATOR_1_PIN=5 ; //simulerad analog fran digital
 const byte ACTUATOR_2_PIN=3 ; //simulerad analog fran digital
@@ -20,6 +20,7 @@ public:
 void init();
   /*runs tha satup/initialisation for the program
   */
+bool sensor();
 
 void circular_motion(bool direction,byte speed=SERVO_SPEED);
   /*den cirklara rorelsen mellan riktad mot kran och riktad fran kran.
@@ -72,7 +73,7 @@ private:
 
 
   Servo _servo ;
-
+  int _pir_state = LOW;  //det sensorn kanner we start, assuming no motion detected
 
 };
 

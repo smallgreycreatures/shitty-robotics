@@ -12,8 +12,37 @@ void Kattkran::init(){
 //TODO a nice init
     pinMode(SENSOR_PIN,INPUT);
     _servo.attach(SERVO_PIN);
+    pinMode(LED_BUILTIN, OUTPUT);
 }
 
+
+bool Kattkran::sensor(){
+
+  int val = 0;  // variable for reading the pin status
+
+  val = digitalRead(SENSOR_PIN);  // read input value
+  if (val == LOW) {            // check if the input is active
+    digitalWrite(LED_BUILTIN, HIGH);  // turn LED ON
+    if (_pir_state == LOW) {
+      // we have just turned on
+      Serial.println("Motion detected!");
+      // We only want to print on the output change, not state
+      _pir_state = HIGH;
+    }
+  } else {
+    digitalWrite(LED_BUILTIN, LOW); // turn LED OFF
+    if (_pir_state == HIGH){
+      // we have just turned of
+      Serial.println("Motion ended!");
+      // We only want to print on the output change, not state
+      _pir_state = LOW;
+    }
+  }
+  if (_pir_state==HIGH)
+    return  true ;
+  else
+    return false;
+}
 
 void Kattkran::circular_motion(bool direction, byte speed) {
   // TODO verify circular_motion function
@@ -66,7 +95,7 @@ void Kattkran::time_limit(){
 
   int t=0; //time unit
   while(t<WAIT_TIME){
-    if(digitalRead(SENSOR_PIN==HIGH))
+    if(sensor())
       t=0; //cat's back
 
     else{
