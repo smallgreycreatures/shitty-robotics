@@ -10,6 +10,7 @@ Kattkran kattkran ;
 void setup () {
   kattkran.init();
   Serial.begin(9600);
+  delay(DELAY_AFTER_COMPLETION);
 }
 
 void loop() {
@@ -34,5 +35,6 @@ QUESTION does the loop look good?
     is_water_on=false;
     kattkran.go_to_rest();
     kattkran.circular_motion(true);
+    delay(DELAY_AFTER_COMPLETION);
   }
 }
