@@ -8,6 +8,7 @@ bool is_water_on=false ;
 Kattkran kattkran ;
 
 void setup () {
+  kattkran.init();
   pinMode(SENSOR_PIN,INPUT);
 }
 

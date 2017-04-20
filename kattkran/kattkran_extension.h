@@ -17,7 +17,9 @@ class Kattkran
 {
 public:
 
-Kattkran();
+void init();
+  /*runs tha satup/initialisation for the program
+  */
 
 void circular_motion(bool direction,byte speed=SERVO_SPEED);
   /*den cirklara rorelsen mellan riktad mot kran och riktad fran kran.

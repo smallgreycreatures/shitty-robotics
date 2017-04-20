@@ -8,7 +8,7 @@
 
 
 
-Kattkran::Kattkran(){
+void Kattkran::init(){
 //TODO a nice init
     pinMode(SENSOR_PIN,INPUT);
     _servo.attach(SERVO_PIN);
@@ -63,22 +63,22 @@ void Kattkran::turn_water_off() {
 }
 
 void Kattkran::time_limit(){
-   
+
   int t=0; //time unit
   while(t<WAIT_TIME){
-    if(digitalRead(SENSOR_PIN==HIGH)){
+    if(digitalRead(SENSOR_PIN==HIGH))
       t=0; //cat's back
-    }
+
     else{
-      t++; //if cat isn't there, ++ time unit to later exit function 
+      delay(1);
+      t++; //if cat isn't there, ++ time unit to later exit function
     }
-    
-    }
+
   }
-  
+}
+
 
 void Kattkran::identify_tap(){
 
 
 }
-
