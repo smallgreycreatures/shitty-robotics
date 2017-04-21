@@ -9,7 +9,6 @@
 
 
 void Kattkran::init(){
-//TODO a nice init
     pinMode(SENSOR_PIN,INPUT);
     _servo.attach(SERVO_PIN);
     pinMode(LED_BUILTIN, OUTPUT);
@@ -18,30 +17,29 @@ void Kattkran::init(){
 
 bool Kattkran::sensor(){
 
-  int val = 0;  // variable for reading the pin status
+  // NOTE currently the internal led activte when motion is detected
+  // NOTE the sesor react with a LOW signal
 
-  val = digitalRead(SENSOR_PIN);  // read input value
-  if (val == LOW) {            // check if the input is active
+  if (digitalRead(SENSOR_PIN) == LOW) {// check if the input is active
     digitalWrite(LED_BUILTIN, HIGH);  // turn LED ON
-    if (_pir_state == LOW) {
+    if (_pir_state == HIGH) {
       // we have just turned on
       Serial.println("Motion detected!");
       // We only want to print on the output change, not state
-      _pir_state = HIGH;
+      _pir_state = LOW;
     }
-  } else {
+    return true;
+  }
+  else {//no motion detected
     digitalWrite(LED_BUILTIN, LOW); // turn LED OFF
-    if (_pir_state == HIGH){
+    if (_pir_state == LOW){
       // we have just turned of
       Serial.println("Motion ended!");
       // We only want to print on the output change, not state
-      _pir_state = LOW;
+      _pir_state = HIGH;
     }
+    return  false ;
   }
-  if (_pir_state==HIGH)
-    return  true ;
-  else
-    return false;
 }
 
 void Kattkran::circular_motion(bool direction, byte speed) {

@@ -21,6 +21,10 @@ void init();
   /*runs tha satup/initialisation for the program
   */
 bool sensor();
+  /*this function return true if the sensor senses motion and
+  change the state of _pir_state.
+  note that the sensor output LOW when motion is detected.
+  */
 
 void circular_motion(bool direction,byte speed=SERVO_SPEED);
   /*den cirklara rorelsen mellan riktad mot kran och riktad fran kran.
@@ -73,7 +77,7 @@ private:
 
 
   Servo _servo ;
-  int _pir_state = LOW;  //det sensorn kanner we start, assuming no motion detected
+  int _pir_state = HIGH;//store the detected sensor input in this variable
 
 };
 
