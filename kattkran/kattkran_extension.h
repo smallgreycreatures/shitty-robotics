@@ -11,7 +11,7 @@ const byte ACTUATOR_2_PIN=3 ; //simulerad analog fran digital
 
 const int WAIT_TIME=10000;//time between the cat leaving and water tirnd off in ms
 const byte SERVO_SPEED=20;//the rotating the servo will have in [ms/deg]
-const int DELAY_AFTER_COMPLETION=3000;//the time the sensar is inactive after tap begin tirnd off
+const int DELAY_AFTER_COMPLETION=3000;//the time the sensor is inactive after tap begin turned off
 
 class Kattkran
 {

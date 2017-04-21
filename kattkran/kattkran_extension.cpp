@@ -17,11 +17,11 @@ void Kattkran::init(){
 
 bool Kattkran::sensor(){
 
-  // NOTE currently the internal led activte when motion is detected
-  // NOTE the sesor react with a LOW signal
+  // NOTE currently the internal led active when motion is detected
+  // NOTE the sensor react with a LOW signal
 
   if (digitalRead(SENSOR_PIN) == LOW) {// check if the input is active
-    digitalWrite(LED_BUILTIN, HIGH);  // turn LED ON
+    //digitalWrite(LED_BUILTIN, HIGH);  // turn LED ON
     if (_pir_state == HIGH) {
       // we have just turned on
       Serial.println("Motion detected!");
@@ -31,14 +31,14 @@ bool Kattkran::sensor(){
     return true;
   }
   else {//no motion detected
-    digitalWrite(LED_BUILTIN, LOW); // turn LED OFF
+    //digitalWrite(LED_BUILTIN, LOW); // turn LED OFF
     if (_pir_state == LOW){
       // we have just turned of
       Serial.println("Motion ended!");
       // We only want to print on the output change, not state
       _pir_state = HIGH;
     }
-    return  false ;
+    return false;
   }
 }
 
