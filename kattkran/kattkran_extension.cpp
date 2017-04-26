@@ -11,6 +11,8 @@
 void Kattkran::init(){
     pinMode(SENSOR_PIN,INPUT);
     _servo.attach(SERVO_PIN);
+    _actuator0.attach(ACTUATOR_0_PIN, PUMP_0_MIN, PUMP_0_MAX);
+    _actuator1.attach(ACTUATOR_1_PIN, PUMP_1_MIN, PUMP_1_MAX);
     pinMode(LED_BUILTIN, OUTPUT);
 }
 
@@ -82,11 +84,42 @@ void Kattkran::go_to_rest() {
 }
 
 void Kattkran::turn_water_on() {
+  _actuator0.write(ACTUATOR_0_OPEN_TAP); //Write desired position to actuator 0
+  delay(15);
+
+  while (analogRead(A0) < ACTUATOR_0_OPEN_TAP) {
+    //Wait until actuator is in final position
+    delay(100);
+    //It takes 100ms for the AD converter to convert signal.
+    //Better just wait that time before reading signal again
+  }
+
+  _actuator1.write(ACTUATOR_1_OPEN_TAP); //Write desired position to actuator 1
+  delay(15);
+
+  while (analogRead(A1) < ACTUATOR_1_OPEN_TAP) {
+    delay(100);
+  }
 
 }
 
 void Kattkran::turn_water_off() {
+  _actuator0.write(ACTUATOR_0_CLOSE_TAP); //Write desired position to actuator 0
+  delay(15);
 
+  while (analogRead(A0) < ACTUATOR_0_CLOSE_TAP) {
+    //Wait until actuator is in final position
+    delay(100);
+    //It takes 100ms for the AD converter to convert signal.
+    //Better just wait that time before reading signal again
+  }
+
+  _actuator1.write(ACTUATOR_1_CLOSE_TAP); //Write desired position to actuator 1
+  delay(15);
+
+  while (analogRead(A1) < ACTUATOR_1_CLOSE_TAP) {
+    delay(100);
+  }
 }
 
 void Kattkran::time_limit(){

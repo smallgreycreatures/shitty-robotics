@@ -5,9 +5,21 @@
 #include <Servo.h>
 
 const byte SERVO_PIN=3;  //digital servo ut
-const byte SENSOR_PIN=2 ; //digital in
-const byte ACTUATOR_1_PIN=5 ; //simulerad analog fran digital
-const byte ACTUATOR_2_PIN=3 ; //simulerad analog fran digital
+const byte SENSOR_PIN=2; //digital in
+const byte ACTUATOR_0_PIN=3; //simulerad analog fran digital
+const byte ACTUATOR_1_PIN=9; //simulerad analog fran digital
+
+//Final positions for Actuator 0 or 1 when open and close tap
+const byte ACTUATOR_0_OPEN_TAP = 80; //TODO Change dummy value
+const byte ACTUATOR_1_OPEN_TAP = 90; //TODO Change dummy value
+const byte ACTUATOR_0_CLOSE_TAP = 45;//TODO Change dummy value
+const byte ACTUATOR_1_CLOSE_TAP = 66;//TODO Change dummy value
+
+//Limits for the hydralic systems. Are set when actuator servos inits
+const byte PUMP_0_MIN = 45; //TODO Change dummy value
+const byte PUMP_0_MAX = 141;//TODO Change dummy value
+const byte PUMP_1_MIN = 45;//TODO Change dummy value
+const byte PUMP_1_MAX = 141;//TODO Change dummy value
 
 const int WAIT_TIME=10000;//time between the cat leaving and water tirnd off in ms
 const byte SERVO_SPEED=20;//the rotating the servo will have in [ms/deg]
@@ -72,13 +84,14 @@ private:
   byte _away_angle=160   ;//angle that the arm shoud start pointig to
   byte _tap_angle=10  ;//angle the arm is pointing to when its pointing towardes the tap
 
-  byte _actuator_1_position;//the analog value written to the linear actuators
-  byte _actuator_2_position;//0->0V  , 255->5V
+  byte _actuator_0_position;//the analog value written to the linear actuators
+  byte _actuator_1_position;//0cm=45, 10cm=141
 
 
-  Servo _servo ;
+  Servo _servo;
   int _pir_state = HIGH;//store the detected sensor input in this variable
-
+  Servo _actuator0;
+  Servo _actuator1;
 };
 
 
