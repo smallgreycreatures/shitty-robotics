@@ -21,6 +21,10 @@ const byte PUMP_0_MAX = 141;//TODO Change dummy value
 const byte PUMP_1_MIN = 45;//TODO Change dummy value
 const byte PUMP_1_MAX = 141;//TODO Change dummy value
 
+//values for the positions when the actuators are in rest positions,
+const byte ACTUATOR_0_REST = 50;//TODO Change dummy value
+const byte ACTUATOR_1_REST = 50;//TODO Change dummy value
+
 const int WAIT_TIME=10000;//time between the cat leaving and water tirnd off in ms
 const byte SERVO_SPEED=20;//the rotating the servo will have in [ms/deg]
 const int DELAY_AFTER_COMPLETION=3000;//the time the sensor is inactive after tap begin turned off
@@ -92,6 +96,14 @@ private:
   int _pir_state = HIGH;//store the detected sensor input in this variable
   Servo _actuator0;
   Servo _actuator1;
+
+  int _actuator_write_read_converter(int value,bool way=true);
+  /*converts the angle from serve.wite(angle) to the expected value form
+  analogWrite() or the same backwords
+  if way is true get: input write angle and return analog read value
+  if way=false :input is read analog and output is write angle
+  */
+
 };
 
 

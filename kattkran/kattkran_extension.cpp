@@ -80,14 +80,64 @@ void Kattkran::circular_motion(bool direction, byte speed) {
 }
 
 void Kattkran::go_to_rest() {
+  // TODO skriv om, denna ar gjord pa en halvtimma...
+  bool below;
 
+  analogRead(A0);
+  delay(120);
+  _actuator_0_position=_actuator_write_read_converter(analogRead(A0),false);
+
+  analogRead(A1);
+  delay(120);
+  _actuator_1_position=_actuator_write_read_converter(analogRead(A1),false);
+  if (_actuator_0_position < ACTUATOR_0_CLOSE_TAP && _actuator_1_position < ACTUATOR_1_CLOSE_TAP )
+    below=true;
+  else
+    below=false;
+  if (below){
+    _actuator0.write(PUMP_0_MIN);
+    _actuator1.write(PUMP_1_MIN);
+    while (_actuator_0_position > (PUMP_0_MIN+10) || _actuator_1_position > (PUMP_1_MIN+10) ) {
+      analogRead(A0);
+      delay(120);
+      _actuator_0_position=_actuator_write_read_converter(analogRead(A0),false);
+
+      analogRead(A1);
+      delay(120);
+      _actuator_1_position=_actuator_write_read_converter(analogRead(A1),false);
+    }
+  }
+  else{
+    _actuator0.write(PUMP_0_MAX);
+    _actuator1.write(PUMP_1_MAX);
+    while (_actuator_0_position < (PUMP_0_MAX-10) || _actuator_1_position < (PUMP_1_MAX-10) ) {
+      analogRead(A0);
+      delay(120);
+      _actuator_0_position=_actuator_write_read_converter(analogRead(A0),false);
+
+      analogRead(A1);
+      delay(120);
+      _actuator_1_position=_actuator_write_read_converter(analogRead(A1),false);
+    }
+  }
+  _actuator0.write(ACTUATOR_0_REST);
+  _actuator1.write(ACTUATOR_1_REST);
+  while (_actuator_0_position != ACTUATOR_0_REST || _actuator_1_position != ACTUATOR_0_REST) {
+    analogRead(A0);
+    delay(120);
+    _actuator_0_position=_actuator_write_read_converter(analogRead(A0),false);
+
+    analogRead(A1);
+    delay(120);
+    _actuator_1_position=_actuator_write_read_converter(analogRead(A1),false);
+  }
 }
 
 void Kattkran::turn_water_on() {
   _actuator0.write(ACTUATOR_0_OPEN_TAP); //Write desired position to actuator 0
   delay(15);
 
-  while (analogRead(A0) < ACTUATOR_0_OPEN_TAP) {
+  while (_actuator_write_read_converter(analogRead(A0),false) < ACTUATOR_0_OPEN_TAP) {
     //Wait until actuator is in final position
     delay(100);
     //It takes 100ms for the AD converter to convert signal.
@@ -97,7 +147,7 @@ void Kattkran::turn_water_on() {
   _actuator1.write(ACTUATOR_1_OPEN_TAP); //Write desired position to actuator 1
   delay(15);
 
-  while (analogRead(A1) < ACTUATOR_1_OPEN_TAP) {
+  while (_actuator_write_read_converter(analogRead(A1),false) < ACTUATOR_1_OPEN_TAP) {
     delay(100);
   }
 
@@ -107,7 +157,7 @@ void Kattkran::turn_water_off() {
   _actuator0.write(ACTUATOR_0_CLOSE_TAP); //Write desired position to actuator 0
   delay(15);
 
-  while (analogRead(A0) < ACTUATOR_0_CLOSE_TAP) {
+  while (_actuator_write_read_converter(analogRead(A0),false) < ACTUATOR_0_CLOSE_TAP) {
     //Wait until actuator is in final position
     delay(100);
     //It takes 100ms for the AD converter to convert signal.
@@ -117,7 +167,7 @@ void Kattkran::turn_water_off() {
   _actuator1.write(ACTUATOR_1_CLOSE_TAP); //Write desired position to actuator 1
   delay(15);
 
-  while (analogRead(A1) < ACTUATOR_1_CLOSE_TAP) {
+  while (_actuator_write_read_converter(analogRead(A1),false) < ACTUATOR_1_CLOSE_TAP) {
     delay(100);
   }
 }
@@ -141,4 +191,15 @@ void Kattkran::time_limit(){
 void Kattkran::identify_tap(){
 
 
+}
+
+int Kattkran::_actuator_write_read_converter(int value,bool way){
+  /* eqation is expected to be linear and discribed as f(x)=ax+b when way=true
+  */
+
+  const float a=6.82, b=974;
+  if (way)
+    return ( (int) ((a*value+b) +0.5) );//the +0.5 makes c++ round properly
+  else
+    return ( (int) (1/ ((a*value+b)+0.5) )  );
 }
