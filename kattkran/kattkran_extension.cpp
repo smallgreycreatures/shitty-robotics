@@ -194,12 +194,14 @@ void Kattkran::identify_tap(){
 }
 
 int Kattkran::_actuator_write_read_converter(int value,bool way){
-  /* eqation is expected to be linear and discribed as f(x)=ax+b when way=true
+  /* eqation is expected to be linear and described as f(x)=ax+b when way=true
+    Y=-6.82x+974
+    X=(y-974)/-6.82
   */
 
-  const float a=6.82, b=974;
+  const float a=-6.82, b=974;
   if (way)
-    return ( (int) ((a*value+b) +0.5) );//the +0.5 makes c++ round properly
+    return ((int) ((a*value+b) +0.5));//the +0.5 makes c++ round properly
   else
-    return ( (int) (1/ ((a*value+b)+0.5) )  );
+    return ((int) (((value+b)/a) +0.5));
 }
