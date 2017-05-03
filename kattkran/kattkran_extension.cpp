@@ -11,8 +11,8 @@
 void Kattkran::init(){
     pinMode(SENSOR_PIN,INPUT);
     _servo.attach(SERVO_PIN);
-    _actuator0.attach(ACTUATOR_0_PIN, PUMP_0_MIN, PUMP_0_MAX);
-    _actuator1.attach(ACTUATOR_1_PIN, PUMP_1_MIN, PUMP_1_MAX);
+    _actuator0.attach(ACTUATOR_0_PIN);
+    _actuator1.attach(ACTUATOR_1_PIN);
     pinMode(LED_BUILTIN, OUTPUT);
 }
 
@@ -236,7 +236,7 @@ int Kattkran::_actuator_write_read_converter(int value,bool way){
   if (way)
     return ((int) ((a*value+b) +0.5));//the +0.5 makes c++ round properly
   else
-    return ((int) (((value+b)/a) +0.5));
+    return ((int) (((value-b)/a) +0.5));
 }
 
 int Kattkran::_actuator_cm_to_servo_angle_converter(int value, bool way) {
