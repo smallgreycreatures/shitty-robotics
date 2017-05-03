@@ -90,7 +90,7 @@ void Kattkran::go_to_rest() {
   analogRead(A1);
   delay(120);
   _actuator_1_position=_actuator_write_read_converter(analogRead(A1),false);
-  if (_actuator_0_position < ACTUATOR_0_CLOSE_TAP_1_MOVE && _actuator_1_position < ACTUATOR_1_CLOSE_TAP )
+  if (_actuator_0_position < ACTUATOR_0_CLOSE_TAP_2_MOVE && _actuator_1_position < ACTUATOR_1_CLOSE_TAP )
     below=true;
   else
     below=false;
