@@ -90,7 +90,7 @@ void Kattkran::go_to_rest() {
   analogRead(A1);
   delay(120);
   _actuator_1_position=_actuator_write_read_converter(analogRead(A1),false);
-  if (_actuator_0_position < ACTUATOR_0_CLOSE_TAP && _actuator_1_position < ACTUATOR_1_CLOSE_TAP )
+  if (_actuator_0_position < ACTUATOR_0_CLOSE_TAP_1_MOVE && _actuator_1_position < ACTUATOR_1_CLOSE_TAP )
     below=true;
   else
     below=false;
@@ -134,25 +134,25 @@ void Kattkran::go_to_rest() {
 }
 
 void Kattkran::turn_water_on() {
-  _actuator0.write(ACTUATOR_0_OPEN_TAP); //Write desired position to actuator 0
+  _actuator1.write(ACTUATOR_1_OPEN_TAP); //Write desired position to actuator 1
   delay(15);
 
   int previous_analog_read = 0; //Saved analogRead from 100ms before
-  while (_actuator_write_read_converter(analogRead(A0),false) < ACTUATOR_0_OPEN_TAP) {
+  while (_actuator_write_read_converter(analogRead(A1),false) < ACTUATOR_0_OPEN_TAP) {
 
-    if (previous_analog_read == analogRead(A0)) //Then we're stuck
+    if (previous_analog_read == analogRead(A1)) //Then we're stuck
       break;
-    previous_analog_read = analogRead(A0);
+    previous_analog_read = analogRead(A1);
     //Wait until actuator is in final position
     delay(100);
     //It takes 100ms for the AD converter to convert signal.
     //Better just wait that time before reading signal again
   }
 
-  _actuator1.write(ACTUATOR_1_OPEN_TAP); //Write desired position to actuator 1
+  _actuator0.write(ACTUATOR_0_OPEN_TAP); //Write desired position to actuator 0
   delay(15);
   previous_analog_read = 0;
-  while (_actuator_write_read_converter(analogRead(A1),false) < ACTUATOR_1_OPEN_TAP) {
+  while (_actuator_write_read_converter(analogRead(A0),false) < ACTUATOR_0_OPEN_TAP) {
     if (previous_analog_read == analogRead(A0)) //Then we're stuck
       break;
     previous_analog_read = analogRead(A0);
@@ -163,11 +163,11 @@ void Kattkran::turn_water_on() {
 }
 
 void Kattkran::turn_water_off() {
-  _actuator0.write(ACTUATOR_0_CLOSE_TAP); //Write desired position to actuator 0
+  _actuator0.write(ACTUATOR_0_CLOSE_TAP_1_MOVE); //Write desired position to actuator 0
   delay(15);
 
   int previous_analog_read = 0;//Saved analogRead from 100ms before
-  while (_actuator_write_read_converter(analogRead(A0),false) < ACTUATOR_0_CLOSE_TAP) {
+  while (_actuator_write_read_converter(analogRead(A0),false) < ACTUATOR_0_CLOSE_TAP_1_MOVE) {
     if (previous_analog_read == analogRead(A0)) //Then we're stuck
       break;
     previous_analog_read = analogRead(A0);
@@ -183,10 +183,25 @@ void Kattkran::turn_water_off() {
   delay(15);
   previous_analog_read = 0;
   while (_actuator_write_read_converter(analogRead(A1),false) < ACTUATOR_1_CLOSE_TAP) {
+    if (previous_analog_read == analogRead(A1)) //Then we're stuck
+      break;
+    previous_analog_read = analogRead(A1);
+    delay(100);
+  }
+  _actuator0.write(ACTUATOR_0_CLOSE_TAP_2_MOVE); //Write desired position to actuator 0
+  delay(15);
+
+  previous_analog_read = 0;//Saved analogRead from 100ms before
+  while (_actuator_write_read_converter(analogRead(A0),false) < ACTUATOR_0_CLOSE_TAP_2_MOVE) {
     if (previous_analog_read == analogRead(A0)) //Then we're stuck
       break;
     previous_analog_read = analogRead(A0);
+
+    //Wait until actuator is in final position
     delay(100);
+    //It takes 100ms for the AD converter to convert signal.
+    //Better just wait that time before reading signal again
+
   }
 }
 
@@ -223,3 +238,16 @@ int Kattkran::_actuator_write_read_converter(int value,bool way){
   else
     return ((int) (((value+b)/a) +0.5));
 }
+
+int Kattkran::_actuator_cm_to_servo_angle_converter(int value, bool way) {
+  int start_val = 45;
+  float factor = 9.6;
+
+  if (way == true) { //cm to servo val
+    return ((int) (start_val+(value*factor)));
+  } else {
+    return ((int) ((value-start_val)/factor));
+  }
+
+}
+

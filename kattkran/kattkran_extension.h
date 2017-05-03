@@ -12,7 +12,8 @@ const byte ACTUATOR_1_PIN=10; //simulerad analog fran digital
 //Final positions for Actuator 0 or 1 when open and close tap
 const byte ACTUATOR_0_OPEN_TAP = 80; //TODO Change dummy value
 const byte ACTUATOR_1_OPEN_TAP = 90; //TODO Change dummy value
-const byte ACTUATOR_0_CLOSE_TAP = 45;//TODO Change dummy value
+const byte ACTUATOR_0_CLOSE_TAP_1_MOVE = 90;//TODO Change dummy value
+const byte ACTUATOR_0_CLOSE_TAP_2_MOVE = 45;
 const byte ACTUATOR_1_CLOSE_TAP = 66;//TODO Change dummy value
 
 //Limits for the hydralic systems. Are set when actuator servos inits
@@ -103,7 +104,13 @@ private:
   if way is true get: input write angle and return analog read value
   if way=false :input is read analog and output is write angle
   */
-
+  int _actuator_cm_to_servo_angle_converter(int value, bool way);
+  /*
+   * converts the lenght the actuator reaches out to the angle
+   * value that is written to it.
+   * bool=true -> cm to angle
+   * bool=false -> angle to cm
+   */
 };
 
 
