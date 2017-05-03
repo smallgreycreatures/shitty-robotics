@@ -49,6 +49,8 @@ void Kattkran::circular_motion(bool direction, byte speed) {
   /*
 
   */
+  Serial.print("Circuling ");
+
   byte angle_goal;//the angle that the servo shoud end on
   byte start_angle;//the angle the servo has when the function is calld
   byte current_angle;//the angle that vill change in the function
@@ -57,10 +59,14 @@ void Kattkran::circular_motion(bool direction, byte speed) {
 
   start_angle = _servo.read() ;
 
-  if (direction) //this if/else determen the goal angle
+  if (direction) {//this if/else determen the goal angle
+    Serial.print("away from tap\n");
     angle_goal = _away_angle;
-  else //angle=false
+  }
+  else{ //angle=false
+  Serial.print("towardes tap\n");
     angle_goal = _tap_angle;
+  }
 
   increase_angle = (start_angle < angle_goal);
 
@@ -81,6 +87,7 @@ void Kattkran::circular_motion(bool direction, byte speed) {
 
 void Kattkran::go_to_rest() {
   // TODO skriv om, denna ar gjord pa en halvtimma...
+  Serial.println("Going to Rest.");
   bool below;
 
   analogRead(A0);
@@ -136,7 +143,7 @@ void Kattkran::go_to_rest() {
 void Kattkran::turn_water_on() {
   _actuator1.write(ACTUATOR_1_OPEN_TAP); //Write desired position to actuator 1
   delay(15);
-
+  Serial.println("Turning water on.");
   int previous_analog_read = 0; //Saved analogRead from 100ms before
   while (_actuator_write_read_converter(analogRead(A1),false) < ACTUATOR_0_OPEN_TAP) {
 
@@ -165,7 +172,7 @@ void Kattkran::turn_water_on() {
 void Kattkran::turn_water_off() {
   _actuator0.write(ACTUATOR_0_CLOSE_TAP_1_MOVE); //Write desired position to actuator 0
   delay(15);
-
+  Serial.println("Turning water off.");
   int previous_analog_read = 0;//Saved analogRead from 100ms before
   while (_actuator_write_read_converter(analogRead(A0),false) < ACTUATOR_0_CLOSE_TAP_1_MOVE) {
     if (previous_analog_read == analogRead(A0)) //Then we're stuck
@@ -206,7 +213,7 @@ void Kattkran::turn_water_off() {
 }
 
 void Kattkran::time_limit(){
-
+  Serial.println("Waiting on cat to leave.");
   int t=0; //time unit
   while(t<WAIT_TIME){
     if(sensor())
@@ -250,4 +257,3 @@ int Kattkran::_actuator_cm_to_servo_angle_converter(int value, bool way) {
   }
 
 }
-
