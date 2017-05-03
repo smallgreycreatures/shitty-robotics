@@ -6,8 +6,8 @@
 
 const byte SERVO_PIN=3;  //digital servo ut
 const byte SENSOR_PIN=2; //digital in
-const byte ACTUATOR_0_PIN=3; //simulerad analog fran digital
-const byte ACTUATOR_1_PIN=9; //simulerad analog fran digital
+const byte ACTUATOR_0_PIN=9; //simulerad analog fran digital
+const byte ACTUATOR_1_PIN=10; //simulerad analog fran digital
 
 //Final positions for Actuator 0 or 1 when open and close tap
 const byte ACTUATOR_0_OPEN_TAP = 80; //TODO Change dummy value
