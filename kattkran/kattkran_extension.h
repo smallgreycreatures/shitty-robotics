@@ -30,6 +30,8 @@ const int WAIT_TIME=10000;//time between the cat leaving and water tirnd off in 
 const byte SERVO_SPEED=20;//the rotating the servo will have in [ms/deg]
 const int DELAY_AFTER_COMPLETION=3000;//the time the sensor is inactive after tap begin turned off
 
+const byte GOING_TO_REST_ROTATION_ANGLE=30 ;//when going to rest you need to take a root around the tap whith help of servo
+
 class Kattkran
 {
 public:
@@ -111,6 +113,21 @@ private:
    * bool=true -> cm to angle
    * bool=false -> angle to cm
    */
+   void _circulate(byte goal_angle, byte speed=SERVO_SPEED);
+   /*circulate the rotating servo to goal_angle.
+   The speed is in ms/deg.
+   */
+
+   void _move_actuator(byte position, byte actuator_number);
+   /*moves an actuator in servo mode to the argument position.
+   the function run until the task is finished.
+   */
+
+   void _wait_on_actuator(byte position, byte actuator_number);
+   /*waits until a actuator hase reached it's position.
+   it breaks the funcition if the actiator stops moving.
+   */
+
 };
 
 
