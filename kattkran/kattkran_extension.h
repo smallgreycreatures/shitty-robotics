@@ -17,10 +17,10 @@ const byte ACTUATOR_0_CLOSE_TAP_2_MOVE = 45;
 const byte ACTUATOR_1_CLOSE_TAP = 66;//TODO Change dummy value
 
 //Limits for the hydralic systems. Are set when actuator servos inits
-const byte PUMP_0_MIN = 45; //TODO Change dummy value
-const byte PUMP_0_MAX = 141;//TODO Change dummy value
-const byte PUMP_1_MIN = 45;//TODO Change dummy value
-const byte PUMP_1_MAX = 141;//TODO Change dummy value
+const byte PUMP_0_MIN = 45;// MIN for small pump
+const byte PUMP_0_MAX = 116; //MAX for small pump
+const byte PUMP_1_MIN = 45;//MIN for big pump
+const byte PUMP_1_MAX = 130;//MAX for big pump
 
 //values for the positions when the actuators are in rest positions,
 const byte ACTUATOR_0_REST = 50;//TODO Change dummy value
