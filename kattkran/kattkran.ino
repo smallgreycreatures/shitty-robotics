@@ -22,7 +22,6 @@ QUESTION does the loop look good?
   if (!is_water_on && kattkran.sensor()){//turn the water on
     kattkran.go_to_rest() ;
     //restposition probebly pointing away from tap
-    kattkran.identify_tap() ;
     kattkran.circular_motion(false);
     //resting position pointing towardes tap
     kattkran.turn_water_on();

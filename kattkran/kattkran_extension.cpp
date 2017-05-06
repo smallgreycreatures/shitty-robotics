@@ -49,11 +49,11 @@ void Kattkran::circular_motion(bool direction, byte speed) {
   Serial.print("Circulating ");
   if (direction) {//this if/else determen the goal angle
     Serial.print("away from tap\n");
-    _circulate(_away_angle,speed);
+    _circulate(AWAY_ANGLE,speed);
   }
   else{ //angle=false
   Serial.print("towardes tap\n");
-    _circulate(_tap_angle,speed);
+    _circulate(TAP_ANGLE,speed);
   }
 
 
@@ -62,26 +62,28 @@ void Kattkran::circular_motion(bool direction, byte speed) {
 void Kattkran::go_to_rest() {
   Serial.print("Going to rest");
 
-  byte const ROTATION_DEVIATION=10;
-  bool rotate;
+  byte const ROTATION_DEVIATION=10;//the aomount of degres we can be from tap in ordet to requst rotatiron
+  bool rotate;//is true if we are close to the tap and need ta rotate
 
-  if (_tap_angle-ROTATION_DEVIATION <_servo.read() &&  _servo.read()<ROTATION_DEVIATION+_tap_angle){
+  //if statments below tells ous if we shoud rotate
+  if (TAP_ANGLE-ROTATION_DEVIATION <_servo.read() &&  _servo.read()<ROTATION_DEVIATION+TAP_ANGLE){
     rotate=true;
     Serial.print(", with rotation");
     }
   else
     rotate=false ;
 
-  if (rotate)
+  if (rotate)// rotate if we shoud rotate
     _circulate(GOING_TO_REST_ROTATION_ANGLE);
 
+  //move the actuators simotainiously
   _actuator0.write( ACTUATOR_0_REST);
   _actuator1.write(ACTUATOR_1_REST);
-  _wait_on_actuator(ACTUATOR_0_REST,0);
-  _wait_on_actuator(ACTUATOR_1_REST,1);
+  _wait_on_actuator(ACTUATOR_0_REST,A0);
+  _wait_on_actuator(ACTUATOR_1_REST,A1);
 
- if (rotate)
-  _circulate(_tap_angle);
+ if (rotate)//rotate back again
+  _circulate(TAP_ANGLE);
 
   Serial.print(".\n") ;
 }
@@ -89,20 +91,17 @@ void Kattkran::go_to_rest() {
 void Kattkran::turn_water_on() {
 
   Serial.println("Turning water on.");
-  _move_actuator(ACTUATOR_1_OPEN_TAP,1);
-
-
-  _move_actuator(ACTUATOR_0_OPEN_TAP,0);
-
+  _move_actuator(ACTUATOR_1_OPEN_TAP,A0);
+  _move_actuator(ACTUATOR_0_OPEN_TAP,A0);
 }
 
 void Kattkran::turn_water_off() {
 
   Serial.println("Turning water off.");
-  _move_actuator(ACTUATOR_0_CLOSE_TAP_1_MOVE,0);
+  _move_actuator(ACTUATOR_0_CLOSE_TAP_1_MOVE,A0);
 
   _move_actuator(ACTUATOR_1_CLOSE_TAP,1);
-  _move_actuator(ACTUATOR_0_CLOSE_TAP_2_MOVE,0);
+  _move_actuator(ACTUATOR_0_CLOSE_TAP_2_MOVE,A0);
 
 }
 
@@ -122,23 +121,17 @@ void Kattkran::time_limit(){
 }
 
 
-void Kattkran::identify_tap(){
-
-
-}
 void Kattkran::_circulate(byte goal_angle,byte speed){
 
-  Serial.println("Circulating");
+  Serial.print("Circulating.");
 
-  byte start_angle=_servo.read();//the angle the servo has when the function is calld
-  byte current_angle= start_angle;//the angle that vill change in the function
+  byte current_angle = _servo.read();//the angle that vill change in the function, it start with the ltest writen value.
 
   bool increase_angle;//if true increase curren_angle
-  increase_angle=(start_angle<goal_angle);
+  increase_angle=(current_angle<goal_angle);
   while (goal_angle != current_angle) {
-    /*
-      this loop will change the curren_angle until curren_angle and goal is same
-    */
+    //this loop will change the curren_angle until curren_angle and goal is same
+
     _servo.write(current_angle) ;
     delay(speed) ;
     if (increase_angle)
@@ -146,31 +139,32 @@ void Kattkran::_circulate(byte goal_angle,byte speed){
     else
       --current_angle;
   }
+  Serial.print("Circulation ended.\n");
 }
 
-void Kattkran::_move_actuator(byte position,byte actuator_number) {
-  Servo *actuator_object;//kind of unnecisarry to do this way...
+void Kattkran::_move_actuator(byte position,byte actuator_read_pin,   Servo *actuator_object) {
 
-  if (actuator_number==1)
+  //the if statnts below ar kind of specifik to our use
+  if (actuator_object == NULL){//if no object is given, go with actiator 0 or 1.
+  if (actuator_read_pin==A0)
     actuator_object = & _actuator1;
   else
     actuator_object = & _actuator0;
-
+  }
   (*actuator_object).write(position);
   delay(15);
-  _wait_on_actuator(position,actuator_number);
+  _wait_on_actuator(position,actuator_read_pin);
+
 }
 
-void Kattkran::_wait_on_actuator(byte position,byte actuator_number) {
+void Kattkran::_wait_on_actuator(byte position,byte actuator_read_pin) {
 
-  byte actuator_pin=A0+actuator_number;
   int previous_analog_read = 0;//Saved analogRead from 100ms before
 
-
-  while (_actuator_write_read_converter(analogRead(actuator_pin),false) < position) {
-    if (previous_analog_read == analogRead(actuator_pin)) //Then we're stuck
+  while (_actuator_write_read_converter(analogRead(actuator_read_pin),false) < position) {
+    if (previous_analog_read == analogRead(actuator_read_pin)) //Then we're stuck
       break;
-    previous_analog_read = analogRead(actuator_pin);
+    previous_analog_read = analogRead(actuator_read_pin);
 
     //Wait until actuator is in final position
     delay(100);

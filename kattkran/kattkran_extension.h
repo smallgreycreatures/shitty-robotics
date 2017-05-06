@@ -26,11 +26,21 @@ const byte PUMP_1_MAX = 141;//TODO Change dummy value
 const byte ACTUATOR_0_REST = 50;//TODO Change dummy value
 const byte ACTUATOR_1_REST = 50;//TODO Change dummy value
 
-const int WAIT_TIME=10000;//time between the cat leaving and water tirnd off in ms
-const byte SERVO_SPEED=20;//the rotating the servo will have in [ms/deg]
-const int DELAY_AFTER_COMPLETION=3000;//the time the sensor is inactive after tap begin turned off
+//time between the cat leaving and water tirnd off in ms
+const int WAIT_TIME=10000;//TODO Change dummy value
 
-const byte GOING_TO_REST_ROTATION_ANGLE=30 ;//when going to rest you need to take a root around the tap whith help of servo
+//the rotating the servo will have in [ms/deg]
+const byte SERVO_SPEED=20;//TODO Change dummy value
+
+//the time the sensor is inactive after tap begin turned off
+const int DELAY_AFTER_COMPLETION=3000;//TODO Change dummy value
+
+//when going to rest you need to take a root around the tap whith help of servo
+const byte GOING_TO_REST_ROTATION_ANGLE=30 ;//TODO Change dummy value
+
+//below are the angle limits for the rotating base servo
+const byte TAP_ANGLE=10;//TODO Change dummy value
+const byte AWAY_ANGLE=150;//TODO Change dummy value
 
 class Kattkran
 {
@@ -81,15 +91,7 @@ void time_limit();
   depends on sensor,(wait_time)
   */
 
-void identify_tap();
-  /*
-  QUESTION :what does this do
-  i don't know what this does but Frans told me it shoud be here
-  */
 private:
-  //the two variables below are detrenmend by identify_tap?
-  byte _away_angle=160   ;//angle that the arm shoud start pointig to
-  byte _tap_angle=10  ;//angle the arm is pointing to when its pointing towardes the tap
 
   byte _actuator_0_position;//the analog value written to the linear actuators
   byte _actuator_1_position;//0cm=45, 10cm=141
@@ -113,17 +115,20 @@ private:
    * bool=true -> cm to angle
    * bool=false -> angle to cm
    */
-   void _circulate(byte goal_angle, byte speed=SERVO_SPEED);
-   /*circulate the rotating servo to goal_angle.
+   void _circulate(byte goal_angle, byte speed = SERVO_SPEED);
+   /*circulate the rotating servo(_servo) to goal_angle.
    The speed is in ms/deg.
    */
 
-   void _move_actuator(byte position, byte actuator_number);
+   void _move_actuator(byte position, byte actuator_read_pin, Servo *actuator_object=NULL );
    /*moves an actuator in servo mode to the argument position.
    the function run until the task is finished.
+   position writes to actiator_object in servo mode.
+   actuator_read_pin makes the asumption that actuator position and is related with _actuator_write_read_converter.
+   actiator_object is the actuator writen to in servo mode.
    */
 
-   void _wait_on_actuator(byte position, byte actuator_number);
+   void _wait_on_actuator(byte position, byte actuator_read_pin);
    /*waits until a actuator hase reached it's position.
    it breaks the funcition if the actiator stops moving.
    */
