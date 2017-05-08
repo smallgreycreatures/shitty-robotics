@@ -18,7 +18,15 @@ void loop() {
 see flow shart for execution order
 QUESTION does the loop look good?
 */
-
+  kattkran.go_to_rest();
+  delay(5000);
+  kattkran.turn_water_on();
+  delay(000);
+  kattkran.go_to_rest();
+  delay(5000);
+  kattkran.turn_water_off();
+  delay(5000);
+/*
   if (!is_water_on && kattkran.sensor()){//turn the water on
     kattkran.go_to_rest() ;
     //restposition probebly pointing away from tap
@@ -35,5 +43,5 @@ QUESTION does the loop look good?
     kattkran.go_to_rest();
     kattkran.circular_motion(true);
     delay(DELAY_AFTER_COMPLETION);
-  }
+  }*/
 }

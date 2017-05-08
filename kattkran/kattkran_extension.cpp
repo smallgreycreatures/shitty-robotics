@@ -14,6 +14,10 @@ void Kattkran::init(){
     _actuator0.attach(ACTUATOR_0_PIN);
     _actuator1.attach(ACTUATOR_1_PIN);
     pinMode(LED_BUILTIN, OUTPUT);
+    _actuators_go_to_min();
+
+    go_to_rest();
+    _circulate(AWAY_ANGLE);
 }
 
 
@@ -62,7 +66,7 @@ void Kattkran::circular_motion(bool direction, byte speed) {
 void Kattkran::go_to_rest() {
   Serial.print("Going to rest");
 
-  byte const ROTATION_DEVIATION=10;//the aomount of degres we can be from tap in ordet to requst rotatiron
+  byte const ROTATION_DEVIATION=10;//the amount of degres we can be from tap in ordet to requst rotatiron
   bool rotate;//is true if we are close to the tap and need ta rotate
 
   //if statments below tells ous if we shoud rotate
@@ -77,7 +81,7 @@ void Kattkran::go_to_rest() {
     _circulate(GOING_TO_REST_ROTATION_ANGLE);
 
   //move the actuators simotainiously
-  _actuator0.write( ACTUATOR_0_REST);
+  _actuator0.write(ACTUATOR_0_REST);
   _actuator1.write(ACTUATOR_1_REST);
   _wait_on_actuator(ACTUATOR_0_REST,A0);
   _wait_on_actuator(ACTUATOR_1_REST,A1);
@@ -89,19 +93,22 @@ void Kattkran::go_to_rest() {
 }
 
 void Kattkran::turn_water_on() {
-
+  _circulate(TAP_ANGLE);
+  _actuators_go_to_min();
   Serial.println("Turning water on.");
-  _move_actuator(ACTUATOR_1_OPEN_TAP,A0);
-  _move_actuator(ACTUATOR_0_OPEN_TAP,A0);
+  _move_actuator(ACTUATOR_1_OPEN_TAP,A1, NULL);
+  _move_actuator(ACTUATOR_0_OPEN_TAP,A0, NULL);
 }
 
 void Kattkran::turn_water_off() {
+  _circulate(TAP_ANGLE);
+  _actuators_go_to_min();
 
   Serial.println("Turning water off.");
-  _move_actuator(ACTUATOR_0_CLOSE_TAP_1_MOVE,A0);
-
-  _move_actuator(ACTUATOR_1_CLOSE_TAP,1);
-  _move_actuator(ACTUATOR_0_CLOSE_TAP_2_MOVE,A0);
+  _move_actuator(ACTUATOR_0_CLOSE_TAP_1_MOVE,A0, NULL);
+  _circulate(AWAY_ANGLE);
+  _move_actuator(ACTUATOR_1_CLOSE_TAP,A1, NULL);
+  _move_actuator(ACTUATOR_0_CLOSE_TAP_2_MOVE,A0, NULL);
 
 }
 
@@ -142,7 +149,7 @@ void Kattkran::_circulate(byte goal_angle,byte speed){
   Serial.print("Circulation ended.\n");
 }
 
-void Kattkran::_move_actuator(byte position,byte actuator_read_pin,   Servo *actuator_object) {
+void Kattkran::_move_actuator(byte position, byte actuator_read_pin, Servo *actuator_object) {
 
   //the if statnts below ar kind of specifik to our use
   if (actuator_object == NULL){//if no object is given, go with actiator 0 or 1.
@@ -153,24 +160,32 @@ void Kattkran::_move_actuator(byte position,byte actuator_read_pin,   Servo *act
   }
   (*actuator_object).write(position);
   delay(15);
-  _wait_on_actuator(position,actuator_read_pin);
+  _wait_on_actuator(position, actuator_read_pin);
 
 }
 
-void Kattkran::_wait_on_actuator(byte position,byte actuator_read_pin) {
+void Kattkran::_wait_on_actuator(byte position, byte actuator_read_pin) {
 
   int previous_analog_read = 0;//Saved analogRead from 100ms before
-
-  while (_actuator_write_read_converter(analogRead(actuator_read_pin),false) < position) {
-    if (previous_analog_read == analogRead(actuator_read_pin)) //Then we're stuck
+  int analog_read = analogRead(actuator_read_pin);
+  while (_actuator_write_read_converter(analog_read ,false) < position) {
+    if (previous_analog_read == analog_read) //Then we're stuck
       break;
-    previous_analog_read = analogRead(actuator_read_pin);
+    previous_analog_read = analog_read;
 
     //Wait until actuator is in final position
     delay(100);
     //It takes 100ms for the AD converter to convert signal.
     //Better just wait that time before reading signal again
+    analog_read = analogRead(actuator_read_pin);
   }
+}
+
+void Kattkran::_actuators_go_to_min() {
+  _move_actuator(PUMP_0_MIN, A0, NULL);
+  _wait_on_actuator(PUMP_0_MIN, A0);
+  _move_actuator(PUMP_1_MIN, A1, NULL);
+  _wait_on_actuator(PUMP_0_MIN, A1);
 }
 
 int Kattkran::_actuator_write_read_converter(int value,bool way){
