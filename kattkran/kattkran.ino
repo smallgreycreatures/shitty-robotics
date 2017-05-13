@@ -19,31 +19,7 @@ void loop() {
 see flow shart for execution order
 QUESTION does the loop look good?
 */
-  //kattkran.go_to_rest();
- // delay(5000);
- /* kattkran.circular_motion(false, 10);
-  Serial.println("should be 50");
-  delay(5000);
-  kattkran.circular_motion(true, 10);
-  delay(5000);
-  kattkran.turn_water_on();
-  delay(5000);
-  kattkran.go_to_rest();
-  /*kattkran.go_to_rest();
-  delay(5000);
-  kattkran.circular_motion(true, 50);
-  delay(5000);
-  kattkran.turn_water_off();
-  delay(5000);*/
- /* kattkran.turn_water_on();
-  delay(5000);
-  kattkran.circular_motion(true, 10);
-  delay(2000);
-  kattkran.go_to_rest();
-  delay(5000);
-  kattkran.circular_motion(false, 10);
-  delay(2000);
-*/
+
   if (!is_water_on && kattkran.sensor()){//turn the water on
     kattkran.go_to_rest() ;
     delay(500);
