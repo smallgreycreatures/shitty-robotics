@@ -10,14 +10,17 @@
 
 void Kattkran::init(){
     pinMode(SENSOR_PIN,INPUT);
-    _servo.attach(SERVO_PIN);
+    
     _actuator0.attach(ACTUATOR_0_PIN);
     _actuator1.attach(ACTUATOR_1_PIN);
     pinMode(LED_BUILTIN, OUTPUT);
     _actuators_go_to_min();
-
+    delay(2000);
+    _servo.attach(SERVO_PIN);
     go_to_rest();
+    delay(2000);
     _circulate(AWAY_ANGLE);
+    delay(500);
 }
 
 
@@ -69,7 +72,7 @@ void Kattkran::go_to_rest() {
   byte const ROTATION_DEVIATION=10;//the amount of degres we can be from tap in ordet to requst rotatiron
   bool rotate;//is true if we are close to the tap and need ta rotate
 
-  //if statments below tells ous if we shoud rotate
+  //if statments below tells us if we shoud rotate
   if (TAP_ANGLE-ROTATION_DEVIATION <_servo.read() &&  _servo.read()<ROTATION_DEVIATION+TAP_ANGLE){
     rotate=true;
     Serial.print(", with rotation");
@@ -79,13 +82,13 @@ void Kattkran::go_to_rest() {
 
   if (rotate)// rotate if we shoud rotate
     _circulate(GOING_TO_REST_ROTATION_ANGLE);
-
+  delay(500);
   //move the actuators simotainiously
   _actuator0.write(ACTUATOR_0_REST);
   _actuator1.write(ACTUATOR_1_REST);
   _wait_on_actuator(ACTUATOR_0_REST,A0);
   _wait_on_actuator(ACTUATOR_1_REST,A1);
-
+  delay(1000);
  if (rotate)//rotate back again
   _circulate(TAP_ANGLE);
 
@@ -93,23 +96,33 @@ void Kattkran::go_to_rest() {
 }
 
 void Kattkran::turn_water_on() {
-  _circulate(TAP_ANGLE);
-  _actuators_go_to_min();
+  //_circulate(TAP_ANGLE);
+  //_actuators_go_to_min();
   Serial.println("Turning water on.");
-  _move_actuator(ACTUATOR_1_OPEN_TAP,A1, NULL);
-  _move_actuator(ACTUATOR_0_OPEN_TAP,A0, NULL);
+  _move_actuator(ACTUATOR_1_OPEN_TAP,A1, &_actuator1);
+  Serial.println("Actuator0 open tap");
+  _move_actuator(ACTUATOR_0_OPEN_TAP,A0, &_actuator0);
+  delay(2000);
+  _move_actuator(PUMP_0_MIN, A0, &_actuator0);
 }
 
 void Kattkran::turn_water_off() {
-  _circulate(TAP_ANGLE);
-  _actuators_go_to_min();
-
+  //_circulate(TAP_ANGLE);
+  //_actuators_go_to_min();
+  _circulate(GOING_TO_REST_ROTATION_ANGLE);
+  delay(2000);
   Serial.println("Turning water off.");
   _move_actuator(ACTUATOR_0_CLOSE_TAP_1_MOVE,A0, NULL);
-  _circulate(AWAY_ANGLE);
+  delay(1000);
   _move_actuator(ACTUATOR_1_CLOSE_TAP,A1, NULL);
-  _move_actuator(ACTUATOR_0_CLOSE_TAP_2_MOVE,A0, NULL);
-
+  delay(2000);
+  _circulate(TAP_ANGLE);
+  delay(1000);
+  _move_actuator(PUMP_0_MIN,A0, NULL);
+  delay(4000);
+  _move_actuator(PUMP_0_MAX, A0, NULL);
+  _circulate(GOING_TO_REST_ROTATION_ANGLE);
+  _actuators_go_to_min();
 }
 
 void Kattkran::time_limit(){
@@ -129,11 +142,12 @@ void Kattkran::time_limit(){
 
 
 void Kattkran::_circulate(byte goal_angle,byte speed){
-
+  
   Serial.print("Circulating.");
-
+  Serial.print(goal_angle, DEC);
+  Serial.println("");
   byte current_angle = _servo.read();//the angle that vill change in the function, it start with the ltest writen value.
-
+  Serial.print(current_angle, DEC);
   bool increase_angle;//if true increase curren_angle
   increase_angle=(current_angle<goal_angle);
   while (goal_angle != current_angle) {
@@ -146,6 +160,8 @@ void Kattkran::_circulate(byte goal_angle,byte speed){
     else
       --current_angle;
   }
+  Serial.println("Current angle");
+  Serial.print(current_angle, DEC);
   Serial.print("Circulation ended.\n");
 }
 
@@ -154,9 +170,9 @@ void Kattkran::_move_actuator(byte position, byte actuator_read_pin, Servo *actu
   //the if statnts below ar kind of specifik to our use
   if (actuator_object == NULL){//if no object is given, go with actiator 0 or 1.
   if (actuator_read_pin==A0)
-    actuator_object = & _actuator1;
-  else
     actuator_object = & _actuator0;
+  else
+    actuator_object = & _actuator1;
   }
   (*actuator_object).write(position);
   delay(15);
@@ -182,9 +198,10 @@ void Kattkran::_wait_on_actuator(byte position, byte actuator_read_pin) {
 }
 
 void Kattkran::_actuators_go_to_min() {
-  _move_actuator(PUMP_0_MIN, A0, NULL);
+  Serial.println("go to min");
+  _move_actuator(PUMP_0_MIN, A0, &_actuator0);
   _wait_on_actuator(PUMP_0_MIN, A0);
-  _move_actuator(PUMP_1_MIN, A1, NULL);
+  _move_actuator(PUMP_1_MIN, A1, &_actuator1);
   _wait_on_actuator(PUMP_0_MIN, A1);
 }
 

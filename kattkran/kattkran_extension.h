@@ -10,37 +10,37 @@ const byte ACTUATOR_0_PIN=9; //simulerad analog fran digital
 const byte ACTUATOR_1_PIN=10; //simulerad analog fran digital
 
 //Final positions for Actuator 0 or 1 when open and close tap
-const byte ACTUATOR_0_OPEN_TAP = 113;
+const byte ACTUATOR_0_OPEN_TAP = 60;
 const byte ACTUATOR_1_OPEN_TAP = 65;
 const byte ACTUATOR_0_CLOSE_TAP_1_MOVE = 116;
-const byte ACTUATOR_0_CLOSE_TAP_2_MOVE = 45;
+const byte ACTUATOR_0_CLOSE_TAP_2_MOVE = 50;
 const byte ACTUATOR_1_CLOSE_TAP = 65;
 
 //Limits for the hydralic systems. Are set when actuator servos inits
 const byte PUMP_0_MIN = 45;// MIN for small pump
 const byte PUMP_0_MAX = 116; //MAX for small pump
 const byte PUMP_1_MIN = 45;//MIN for big pump
-const byte PUMP_1_MAX = 130;//MAX for big pump
+const byte PUMP_1_MAX = 115;//MAX for big pump
 
 //values for the positions when the actuators are in rest positions,
 const byte ACTUATOR_0_REST = 45;
-const byte ACTUATOR_1_REST = 65;
+const byte ACTUATOR_1_REST = 56;
 
 //time between the cat leaving and water tirnd off in ms
 const int WAIT_TIME=10000;//TODO Change dummy value
 
 //the rotating the servo will have in [ms/deg]
-const byte SERVO_SPEED=50;//TODO Change dummy value
+const byte SERVO_SPEED=10;//TODO Change dummy value
 
 //the time the sensor is inactive after tap begin turned off
 const int DELAY_AFTER_COMPLETION=3000;//TODO Change dummy value
 
 //when going to rest you need to take a root around the tap whith help of servo
-const byte GOING_TO_REST_ROTATION_ANGLE=125 ;//TODO Change dummy value
+const byte GOING_TO_REST_ROTATION_ANGLE=110;
 
 //below are the angle limits for the rotating base servo
-const byte TAP_ANGLE=90;//TODO Change dummy value
-const byte AWAY_ANGLE=45;//TODO Change dummy value
+const byte TAP_ANGLE=80;
+const byte AWAY_ANGLE=45;
 
 class Kattkran
 {
