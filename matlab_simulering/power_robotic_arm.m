@@ -35,7 +35,7 @@ z=abs(actuator_max_force*sin(xx)+actuator_max_force*sin(yy))-Fk;%is this correct
 title('Result of Foreces')
 xlabel('\alpha,[rad]') %alpha
 ylabel('\beta,[rad]')%beta
-zlabel('Uppåtriktad kraft,[F]')
+zlabel('Uppatriktad kraft,[F]')
 
 
 %new variables
@@ -67,5 +67,5 @@ z=meshgrid(final_force);
 mesh(xx,yy,z), hold on
 xlabel('\alpha,[rad]') %alpha
 ylabel('\beta,[rad]')%beta
-zlabel('Uppåtriktad kraft,[N]')
+zlabel('Uppatriktad kraft,[N]')
 hold off
